@@ -1,12 +1,14 @@
 /*
  * Copyright 2014-2025 JetBrains s.r.o and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-
+@file:OptIn(ExperimentalWasmJsInterop::class)
 package io.ktor.client.webrtc
 
 import web.mediastreams.MediaStream
 import web.rtc.*
 import kotlin.coroutines.CoroutineContext
+import kotlin.js.ExperimentalWasmJsInterop
+import kotlin.js.toArray
 
 /**
  * WebRtc peer connection implementation for JavaScript platform.
@@ -130,6 +132,7 @@ public class JsWebRtcPeerConnection(
     }
 
     override fun close() {
+        super.close()
         connection.close()
     }
 }
@@ -138,6 +141,5 @@ public class JsWebRtcPeerConnection(
  * Returns implementation of the peer connection that is used under the hood. Use it with caution.
  */
 public fun WebRtcPeerConnection.getNative(): RTCPeerConnection {
-    val connection = this as? JsWebRtcPeerConnection ?: error("Wrong peer connection implementation.")
-    return connection.connection
+    return (this as JsWebRtcPeerConnection).connection
 }
